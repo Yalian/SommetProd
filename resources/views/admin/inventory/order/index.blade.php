@@ -19,9 +19,9 @@
                 <tr>
                     <th># Guia</th>
                     <th>Fecha</th>
-                    <th>Precio Total</th>
+                    <th>Sub-Total</th>
                     <th>Descuento</th>
-                    <th>Precio Final</th>
+                    <th>Total</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
@@ -37,14 +37,14 @@
             $('#order').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('material.data') }}",
+                ajax: "{{ route('order.data') }}",
                 columns: [
-                    { data: 0  },
-                    { data: 1, name: 'number_guide' },
-                    { data: 2, name: 'date'  },
-                    { data: 3, name: 'total_price' },
-                    { data: 4, name: 'discount'},
-                    { data: 5, name: 'final_price' }
+                    { data: 'guide', width:'20%' },
+                    { data: 'date', width:'15%' },
+                    { data: 'total', width:'15%'  },
+                    { data: 'discount', width:'15%' },
+                    { data: 'final', width:'15%'},
+                    { data: 'action', width:'10%' }
                 ],
                 language:{
                     url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'

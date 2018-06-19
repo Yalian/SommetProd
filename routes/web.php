@@ -15,30 +15,34 @@ Route::get('/', function () {
     return view('admin.home');
 });
 
-Route::get('/inventario', function (){
+Route::get('/inventario', function () {
     return redirect()->route('stock.index');
 });
 
 Route::prefix('inventario')->group(function () {
 
     // Materials
-
-    Route::get('materiales', 'Inventory\MaterialController@index')->name('material.index');
+    Route::resource('materiales', 'Inventory\MaterialController')->except(['destroy', 'show'])->names([
+        'create' => 'material.create',
+        'store' => 'material.store',
+        'index' => 'material.index',
+        'update' => 'material.update',
+        'edit' => 'material.edit'
+    ]);
     Route::get('materiales/datos', 'Inventory\MaterialController@data')->name('material.data');
-    Route::get('materiales/crear', 'Inventory\MaterialController@create')->name('material.create');
-    Route::post('materiales/guardar', 'Inventory\MaterialController@store')->name('material.store');
-    Route::get('materiales/lista', 'Inventory\MaterialController@list')->name('material.list');
-
 
     // Orders
-
-    Route::get('facturas', 'Inventory\OrderController@index')->name('order.index');
     Route::get('facturas/datos', 'Inventory\OrderController@data')->name('order.data');
-    Route::get('facturas/create', 'Inventory\OrderController@create')->name('order.create');
+    Route::resource('facturas', 'Inventory\OrderController')->except(['destroy', 'edit', 'update'])->names([
+        'create' => 'order.create',
+        'store' => 'order.store',
+        'index' => 'order.index',
+        'show' => 'order.show'
+    ]);
 
     // Stock
-
     Route::get('bodega', 'Inventory\StockController@index')->name('stock.index');
+    Route::get('bodega/datos', 'Inventory\StockController@data')->name('stock.data');
 
 
 });

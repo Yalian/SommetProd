@@ -6,25 +6,21 @@
 
 
             <div class="modal-content">
-                <form method="post">
+                <form method="post" action="{{route('material.update',['id'=> $material->id])}}">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Nuevo Material</h4>
+                        <h4 class="modal-title" id="myModalLabel">Editar Material</h4>
                     </div>
 
                     @Csrf
+                    @method('PUT')
 
                     <div class="modal-body">
                         <div class="input-group">
                             <label class="control-label" for="name">Nombre</label>
-                            <input name="name" type="text" id="name" class="form-control">
-                        </div>
-
-                        <div class="input-group">
-                            <label class="control-label" for="colour">Color</label>
-                            <input name="colour" type="text" id="colour" class="form-control">
+                            <input name="name" type="text" id="name" class="form-control" value="{{$material->name}}">
                         </div>
                     </div>
 

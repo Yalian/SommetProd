@@ -30,7 +30,7 @@
 @push('scripts')
     <script>
         $(function() {
-            $('#material').DataTable({
+            let $table = $('#material').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('material.data') }}",
@@ -42,6 +42,14 @@
                 language:{
                     url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
                 }
+            });
+
+            $('.modalBtn').on('click', function (e) {
+                e.preventDefault();
+                console.log('presionado');
+
+                let id = this.data('id');
+                console.log(id);
             });
 
             $('#new_material').on('click', function (e) {

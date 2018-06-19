@@ -16,11 +16,11 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->date('date');
-            $table->string('number_guide');
-            $table->double('total_price');
-            $table->double('discount');
-            $table->double('final_price');
-            $table->string('img_name');
+            $table->string('guide');
+            $table->double('sub_total',11,2);
+            $table->double('discount',11,2);
+            $table->double('total',11,2);
+            $table->string('img_name')->default('');
 
             $table->timestamps();
         });

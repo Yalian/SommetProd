@@ -15,14 +15,22 @@ class CreateLinesTable extends Migration
     {
         Schema::create('lines', function (Blueprint $table) {
             $table->increments('id');
+
             $table->unsignedInteger('material_id');
             $table->foreign('material_id')->references('id')->on('materials');
             $table->unsignedInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
-            $table->double('unit_price');
-            $table->integer('unit_quantity');
-            $table->double('total_amount');
-            $table->double('total_price');
+
+            $table->enum('unit', ['Mts', 'Kgs', 'Unidades']); //Unidades
+            $table->integer('quantity'); //Cantidad de la unidad
+
+            $table->double('unit_price', 8, 2); //Precio Unitario
+            $table->double('percentage', 5, 2); //Porcentaje de descuento
+            $table->double('unit_price_discount', 8, 2); // Precio Unitario con Descuento
+
+            $table->double('sub_total', 11, 2); //Sub-Total
+            $table->double('iva', 11, 2); //Iva
+            $table->double('total', 11, 2); //Total con descuento
 
             $table->timestamps();
         });

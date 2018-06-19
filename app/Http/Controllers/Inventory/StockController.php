@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Inventory;
 
 
 use App\Http\Controllers\Controller;
-use App\Models\Inventory\Material;
+use App\Models\Inventory\Storage;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -27,10 +27,25 @@ class StockController extends Controller
      */
     public function data()
     {
-        return DataTables::of(Material::all())
-            ->setRowId('id','id')
-            ->addColumn('name', 'name')
-            ->addColumn('colour', 'colour')
+//        $storage = Storage::query()->with('material')->get();
+//        dd($storage[0]->qty_mts);
+
+        return DataTables::of(Storage::query()->with('material')->get())
+            ->setRowId('id', function ($storage){
+                return $storage->id;
+            })
+            ->addColumn('name', function ($storage){
+                return $storage->material->name;
+            })
+            ->addColumn('qtyMts', function ($storage){
+                return $storage->qty_mts . ' Mts';
+            })
+            ->addColumn('qtyKgs', function ($storage){
+                return $storage->qty_kgs . ' Kg';
+            })
+            ->addColumn('qtyUnits', function ($storage){
+                return $storage->qty_units;
+            })
             ->make(true);
     }
 

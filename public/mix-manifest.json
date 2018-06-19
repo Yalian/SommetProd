@@ -4,10 +4,11 @@
     "/css/admin.css": "/css/admin.css",
     "/css/timeline.css": "/css/timeline.css",
     "/js/admin.js": "/js/admin.js",
+    "/js/select2.min.js": "/js/select2.min.js",
     "/js/Chart.js": "/js/Chart.js",
     "/js/bootbox.js": "/js/bootbox.js",
     "/js/bootstrap.js": "/js/bootstrap.js",
     "/js/bootstrap-select.js": "/js/bootstrap-select.js",
-    "/js/toastr.js": "/js/toastr.js",
-    "/css/bootstrap-select.css": "/css/bootstrap-select.css"
+    "/css/bootstrap-select.css": "/css/bootstrap-select.css",
+    "/css/select2.min.css": "/css/select2.min.css"
 }

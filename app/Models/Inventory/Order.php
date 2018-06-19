@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     public function lines(){
-        $this->hasMany('App\Models\Inventory\Line');
+        return $this->hasMany('App\Models\Inventory\Line');
     }
+
+    protected $fillable = ['guide','date','sub_total','discount','total', 'img_name'];
 }

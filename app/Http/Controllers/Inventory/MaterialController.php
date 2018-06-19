@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\Material;
+use App\Models\Inventory\Storage;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -36,7 +37,7 @@ class MaterialController extends Controller
                 return $material->colour;
             })
             ->addColumn('action', function ($material) {
-                return "<a class='btn-sm btn-success' ><span class='fa fa-pencil'></span></a>";
+                return "<a class='btn btn-sm btn-success modalBtn' id='edit' href='".route('material.edit',['id' => $material->id])."' ><span class='fa fa-pencil'></span></a>";
             })
             ->make(true);
     }
@@ -64,18 +65,14 @@ class MaterialController extends Controller
 
         $material->save();
 
+        $storage = new Storage();
+
+        $material->storage()->save($storage);
+
+        return response()->json($material);
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -85,7 +82,8 @@ class MaterialController extends Controller
      */
     public function edit($id)
     {
-        //
+        $material = Material::find($id);
+        return view('admin.inventory.material.edit', ['material' => $material]);
     }
 
     /**
@@ -97,23 +95,13 @@ class MaterialController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $material = Material::find($id);
+        $material->name = $request->name;
+        $material->save();
+
+
+        return response()->redirectToRoute('material.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function list(Request $request)
-    {
-        $term = $request->term ?: '';
-        $tags = Material::where('name', 'like', $term.'%')->lists('name', 'id');
-        $valid_tags = [];
-        foreach ($tags as $id => $name) {
-            $valid_tags[] = ['id' => $id, 'text' => $name];
-        }
-        return \Response::json($valid_tags);
-    }
+
 }

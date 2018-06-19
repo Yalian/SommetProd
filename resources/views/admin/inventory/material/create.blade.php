@@ -1,4 +1,4 @@
-<form method="post" action="{{route('material.store')}}">
+<form method="post"  id="createMaterialForm">
     @Csrf
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -20,10 +20,20 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-        <input class="btn btn-success" type="submit" value="Guardar">
+        <button class="btn btn-danger" id="close" data-dismiss="modal">Cancelar</button>
+        <a class="btn btn-success" id="save">Guardar</a>
     </div>
 </form>
+<script>
+    $(function () {
+        $('#save').on('click',function (e) {
+            e.preventDefault();
+            $.post("{{route('material.store')}}", $('#createMaterialForm').serialize());
+            $('#close').click();
+        })
+    })
+
+</script>
 
 
 
