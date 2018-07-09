@@ -141,10 +141,7 @@
 
             let $lines = [];
 
-            let id = $('#material');  //ID
-            let name = $('#material option:selected'); //Material
-            let unit = $('#unit'); //Unidad
-            let unitName = $('#unit option:selected'); //Nombre Unidad
+
             let quantity = $('#quantity'); //Cantidad
             let pu = $('#pu'); //P.U.
             let pud = $('#PUD'); //P.U.D
@@ -178,6 +175,13 @@
 
             $('#addRow').on('click', function (e) {
                 e.preventDefault();
+
+                let unitName = $('#unit option:selected'); //Nombre Unidad
+                let unit = $('#unit'); //Unidad
+                let id = $('#material');  //ID
+                let name = $('#material option:selected');
+
+
 
                 if (!(pu.val() == '' || quantity.val() == '' || subTotal.val() == '')) {
                     let line = {};
@@ -250,10 +254,11 @@
                         contentType: false,
                         data: $formData2,
                         success: function (response) {
-                            window.location.replace("{{env('APP_URL').'/inventario/facturas'}}");
+                            if (response.view){
+                                window.location.replace("{{env('APP_URL').'/inventario/facturas'}}");
+                            }
                         }
                     });
-
                 } else {
                     bootbox.alert({
                         title: 'Error!',
@@ -261,8 +266,6 @@
                     })
                 }
             })
-
-
         </script>
     @endpush
 @endsection
