@@ -24,6 +24,7 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
+        "jquery-validation": "^1.17.0",
         "toastr": "^2.1.4"
     }
 }

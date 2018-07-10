@@ -22,7 +22,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('admin.inventory.order.index');
+        $message = ['messageType' => session('messageType'), 'text'=> session('message')];
+        return view('admin.inventory.order.index',['message' => $message])->render();
     }
 
     /**
@@ -64,7 +65,8 @@ class OrderController extends Controller
     public function create()
     {
         $materials = Material::all();
-        return view('admin.inventory.order.create', ['materials' => $materials]);
+
+        return view('admin.inventory.order.create', ['materials' => $materials])->render();
     }
 
     /**
@@ -75,72 +77,82 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        try{
+            $lines = json_decode($request['lines']);
 
-        $lines = json_decode($request['lines']);
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
 
-        $file = $request->file('image');
-        $filename = time() . '.' . $file->getClientOriginalExtension();
+            \Illuminate\Support\Facades\Storage::disk('images')->put($filename, File::get($file));
 
-        \Illuminate\Support\Facades\Storage::disk('images')->put($filename, File::get($file));
-
-        $order = new Order([
-            'guide' => $request['guide'],
-            'date' => $request['date'],
-            'sub_total' => $request['subTotal'],
-            'discount' => $request['discount'],
-            'total' => $request['total'],
-            'img_name' => $filename
-        ]);
-        $order->save();
-
-        foreach ($lines as $l) {
-            $line = new Line([
-                'material_id' => $l->id,
-                'unit' => $l->unit,
-                'quantity' => $l->quantity,
-                'unit_price' => $l->pu,
-                'percentage' => $l->percentage,
-                'unit_price_discount' => $l->pud,
-                'sub_total' => $l->subTotal,
-                'iva' => $l->iva,
-                'total' => $l->total
+            $order = new Order([
+                'guide' => $request['guide'],
+                'date' => $request['date'],
+                'sub_total' => $request['subTotal'],
+                'discount' => $request['discount'],
+                'total' => $request['total'],
+                'img_name' => $filename
             ]);
+            $order->save();
 
-            $order->lines()->save($line);
+            foreach ($lines as $l) {
+                $line = new Line([
+                    'material_id' => $l->id,
+                    'unit' => $l->unit,
+                    'quantity' => $l->quantity,
+                    'unit_price' => $l->pu,
+                    'percentage' => $l->percentage,
+                    'unit_price_discount' => $l->pud,
+                    'sub_total' => $l->subTotal,
+                    'iva' => $l->iva,
+                    'total' => $l->total
+                ]);
 
-            $storage = Storage::find($l->id);
+                $order->lines()->save($line);
 
-            switch ($l->unit) {
-                case 'Mts':
-                    $storage->qty_mts += $l->quantity;
-                    break;
-                case 'Kgs':
-                    $storage->qty_kgs += $l->quantity;
-                    break;
-                case'Unidades':
-                    $storage->qty_units += $l->quantity;
-                    break;
+                $storage = Storage::find($l->id);
+
+                switch ($l->unit) {
+                    case 'Mts':
+                        $storage->qty_mts += $l->quantity;
+                        break;
+                    case 'Kgs':
+                        $storage->qty_kgs += $l->quantity;
+                        break;
+                    case'Unidades':
+                        $storage->qty_units += $l->quantity;
+                        break;
+                }
+                $storage->save();
             }
-            $storage->save();
+
+        }catch (\Throwable $e){
+            session()->flash('message',$e->getMessage());
+            session()->flash('messageType','error');
+
+            return response();
         }
 
-        try {
-            $view = view('order.index')->render();
-        } catch (\Throwable $e) {
-            return response()->json([
-                'message' => [
-                    'type' => 'error',
-                    'text' => $e
-                ]
-            ]);
-        }
+
+//        try {
+//            $view = view('admin.inventory.order.index')->render();
+//        } catch (\Throwable $e) {
+//            return response()->json([
+//                'message' => [
+//                    'type' => 'error',
+//                    'text' => $e->getMessage()
+//                ]
+//            ]);
+//        }
+        session()->flash('message','Factura ingresada correctamente!');
+        session()->flash('messageType','success');
 
         return response()->json([
             'message' => [
                 'text'=> 'Factura ingresada correctamente!',
                 'type' => 'success'
             ],
-            'view' => $view
+            'view' => 'view'
         ]);
     }
 
@@ -154,7 +166,7 @@ class OrderController extends Controller
     {
         $order = Order::where('id', $id)->with('lines.material')->first();
 
-        return view('admin.inventory.order.show', ['order' => $order]);
+        return view('admin.inventory.order.show', ['order' => $order])->render();
 
     }
 

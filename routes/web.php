@@ -44,6 +44,28 @@ Route::prefix('inventario')->group(function () {
     Route::get('bodega', 'Inventory\StockController@index')->name('stock.index');
     Route::get('bodega/datos', 'Inventory\StockController@data')->name('stock.data');
 
+});
+
+Route::prefix('administracion')->group(function (){
+
+    //Contracts
+    Route::get('contratos/datos', 'Administration\ContractController@data')->name('contratos.data');
+    Route::resource('contratos', 'Administration\ContractController');
+
+    Route::get('proyecciones/datos', 'Administration\ProjectionController@data')->name('proyecciones.data');
+    Route::resource('proyecciones', 'Administration\ProjectionController');
+
+    Route::get('productos/datos', 'Administration\ProductController@data')->name('productos.data');
+    Route::get('productos/listar/', 'Administration\ProductController@list')->name('productos.list');
+    Route::resource('productos', 'Administration\ProductController');
+
+
+});
+
+Route::prefix('produccion')->group(function (){
+
+
+
 
 });
 

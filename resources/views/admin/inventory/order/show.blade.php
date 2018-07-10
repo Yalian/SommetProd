@@ -52,7 +52,7 @@
         </div>
 
         <div class="col-md-11" style="margin-left: 20px; margin-top: 30px; margin-bottom: 20px">
-            <a class="btn btn-success" href="{{url('images/large/'.$order->img_name)}}">Ver Foto</a>
+            <a class="btn btn-success" href="{{url('images/original/'.$order->img_name)}}">Ver Foto</a>
         </div>
 
 

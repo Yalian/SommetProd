@@ -52,4 +52,16 @@
             });
         });
     </script>
+    @if($message)
+        <script>
+            switch ("{{$message['messageType']}}"){
+                case 'success':
+                    toastr.success("{{$message['text']}}");
+                    break;
+                case 'error':
+                    toastr.error("{{$message['text']}}",'Error!');
+                    break;
+            }
+        </script>
+   @endif
 @endpush

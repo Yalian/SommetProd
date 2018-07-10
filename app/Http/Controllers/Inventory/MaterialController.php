@@ -37,7 +37,7 @@ class MaterialController extends Controller
                 return $material->colour;
             })
             ->addColumn('action', function ($material) {
-                return "<a class='btn btn-sm btn-success modalBtn' id='edit' href='".route('material.edit',['id' => $material->id])."' ><span class='fa fa-pencil'></span></a>";
+                return "<a class='btn btn-sm btn-success' id='edit' data-href='" . route('material.edit', ['id' => $material->id]) . "' ><span class='fa fa-pencil'></span></a>";
             })
             ->make(true);
     }
@@ -49,7 +49,19 @@ class MaterialController extends Controller
      */
     public function create()
     {
-        return view('admin.inventory.material.create');
+        try {
+
+            return view('admin.inventory.material.create')->render();
+
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'message' => [
+                    'type' => 'error',
+                    'text' => $e->getMessage()
+                ]
+            ]);
+        }
     }
 
     /**
@@ -60,16 +72,32 @@ class MaterialController extends Controller
      */
     public function store(Request $request)
     {
-        $material = new Material();
-        $material->name = $request->name;
+        try {
+            $material = new Material();
+            $material->name = $request->name;
 
-        $material->save();
+            $material->save();
 
-        $storage = new Storage();
+            $storage = new Storage();
 
-        $material->storage()->save($storage);
+            $material->storage()->save($storage);
 
-        return response()->json($material);
+            return response()->json([
+                'message' => [
+                    'type' => 'success',
+                    'text' => 'Material creado correctamente!'
+                ]
+            ]);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'message' => [
+                    'type' => 'error',
+                    'text' => $e->getMessage()
+                ]
+            ]);
+        }
+
 
     }
 
@@ -82,8 +110,21 @@ class MaterialController extends Controller
      */
     public function edit($id)
     {
-        $material = Material::find($id);
-        return view('admin.inventory.material.edit', ['material' => $material]);
+        try {
+
+            $material = Material::find($id);
+            return view('admin.inventory.material.edit', ['material' => $material])->render();
+
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'message' => [
+                    'type' => 'error',
+                    'text' => $e->getMessage()
+                ]
+            ]);
+        }
+
     }
 
     /**
@@ -95,12 +136,22 @@ class MaterialController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $material = Material::find($id);
-        $material->name = $request->name;
-        $material->save();
+        try {
+            $material = Material::find($id);
+            $material->name = $request->name;
+            $material->save();
 
+            return response()->redirectToRoute('material.index');
 
-        return response()->redirectToRoute('material.index');
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'message' => [
+                    'type' => 'error',
+                    'text' => $e->getMessage()
+                ]
+            ]);
+        }
     }
 
 

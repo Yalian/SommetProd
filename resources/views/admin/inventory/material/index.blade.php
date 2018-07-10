@@ -44,13 +44,18 @@
                 }
             });
 
-            $('.modalBtn').on('click', function (e) {
-                e.preventDefault();
-                console.log('presionado');
+            $('#material').on('draw.dt', function (e) {
+                $('#edit').each(function (index,element) {
+                    $(this).on('click', function (e) {
+                        console.log('presionado');
 
-                let id = this.data('id');
-                console.log(id);
+                        let href = this.data('href');
+                        console.log(href);
+                    });
+                });
             });
+
+
 
             $('#new_material').on('click', function (e) {
                 e.preventDefault();

@@ -11,5 +11,9 @@ class Material extends Model
         return $this->hasMany('App\Models\Inventory\Storage');
     }
 
+    public function product(){
+        return $this->belongsToMany('App\Models\Administration\Product')->withTimestamps();
+    }
+
 
 }
